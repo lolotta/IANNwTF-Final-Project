@@ -6,6 +6,7 @@ class Low_Level_Features(tf.keras.Model):
     def __init__(self):
         super().__init__()
         self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=1) 
+        #self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=2) 
         self.batchnorm_1 = tf.keras.layers.BatchNormalization()
         self.conv2 = Conv2D(128, 3, activation='relu', padding='same', strides=1)
         self.batchnorm_2 = tf.keras.layers.BatchNormalization()
@@ -120,9 +121,7 @@ class Classification_Layers(tf.keras.Model):
 class Fusion_Layer(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        #32,256,256
-        #
-
+        
         self.repeat_layer = tf.keras.layers.RepeatVector(32*32)
         self.reshape = tf.keras.layers.Reshape(([32,32,256]))
         self.concat = tf.keras.layers.Concatenate(axis=3)
