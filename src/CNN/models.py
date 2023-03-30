@@ -112,7 +112,7 @@ class Only_Classification_Model(tf.keras.Model):
         return predicted_label
 
 class Model(tf.keras.Model):
-    def __init__(self,no_of_classes, optimizer, loss_function_color, loss_function_category):
+    def __init__(self,no_of_classes, optimizer1, optimizer2, loss_function_color, loss_function_category):
         super().__init__()
         self.low_level = Low_Level_Features()        
 
@@ -125,7 +125,8 @@ class Model(tf.keras.Model):
             tf.keras.metrics.CategoricalAccuracy(name="accuracy"),
             tf.keras.metrics.TopKCategoricalAccuracy(k=5,name="top-5-accuracy")]
 
-        self.optimizer = optimizer
+        self.optimizer1 = optimizer1
+        self.optimizer2 = optimizer2
         self.loss_function_color = loss_function_color
         self.loss_function_category = loss_function_category
 
@@ -153,8 +154,8 @@ class Model(tf.keras.Model):
 
         gradients_color = color_tape.gradient(loss_color, self.colorization_model.trainable_variables)
         gradients_category = class_tape.gradient(loss_category, self.classification_model.trainable_variables)
-        self.optimizer.apply_gradients(zip(gradients_color, self.colorization_model.trainable_variables))
-        self.optimizer.apply_gradients(zip(gradients_category, self.classification_model.trainable_variables))
+        self.optimizer1.apply_gradients(zip(gradients_color, self.colorization_model.trainable_variables))
+        self.optimizer2.apply_gradients(zip(gradients_category, self.classification_model.trainable_variables))
         self.metrics[0].update_state(loss_color)  
         self.metrics[1].update_state(loss_category)
         self.metrics[2].update_state(label, predicted_label)

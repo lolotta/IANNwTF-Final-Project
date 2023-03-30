@@ -5,8 +5,8 @@ from keras.layers import Dense, Conv2D, Reshape, GlobalAveragePooling2D, MaxPool
 class Low_Level_Features(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=1) 
-        #self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=2) 
+        #self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=1) 
+        self.conv1 = Conv2D(64, 3, activation='relu', padding='same', strides=2) 
         self.batchnorm_1 = tf.keras.layers.BatchNormalization()
         self.conv2 = Conv2D(128, 3, activation='relu', padding='same', strides=1)
         self.batchnorm_2 = tf.keras.layers.BatchNormalization()
@@ -162,7 +162,7 @@ class Colorization_Layers(tf.keras.Model):
         x = self.batchnorm_2(x, training)
         x = self.conv4(x)
         x = self.conv5(x)
-        #x = self.upsampling3(x)
+        x = self.upsampling3(x)
 
         return x
 

@@ -1,15 +1,9 @@
 import tensorflow as tf
 import tensorflow_io as tfio
 import numpy as np
-from PIL import Image
-import os
-from skimage.color import rgb2lab, rgb2gray, lab2rgb
-from skimage.io import imread, imshow
+
 import matplotlib.pyplot as plt
-import random
-from tqdm import tqdm
-import pickle
-from keras.layers import Dense, Conv2D, Reshape, GlobalAveragePooling2D, MaxPooling2D, UpSampling2D, Flatten
+
 
 def visualize(predicted_color, predicted_label, data, class_names):
     images = data[0]
@@ -22,17 +16,12 @@ def visualize(predicted_color, predicted_label, data, class_names):
     color_image = color_images[0]
     label = labels[0]
 
-    #print(tf.reduce_min(predicted_color), tf.reduce_max(predicted_color))
-    #print(tf.reduce_min(color_image), tf.reduce_max(color_image))
     
     # manually clipping values, because Lab color space is weird
     predicted_color_lab_scaled = tf.clip_by_value(((predicted_color - [0.5, 0.5]) * [200, 200]), -100, 100)
     color_image_lab_scaled = tf.clip_by_value(((color_image - [0.5, 0.5]) * [200, 200]), -100, 100)
     greyscale =tf.squeeze((grey_image - [0.5]) * [200], axis=-1)
 
-    #print(tf.reduce_min(predicted_color_lab_scaled), tf.reduce_max(predicted_color_lab_scaled))
-    #print(tf.reduce_min(color_image_lab_scaled), tf.reduce_max(color_image_lab_scaled))
- 
 
     rgb_prediction = tfio.experimental.color.lab_to_rgb(tf.stack([greyscale, predicted_color_lab_scaled[:,:,0], predicted_color_lab_scaled[:,:,1]],axis=-1))
     rgb_original = tfio.experimental.color.lab_to_rgb(tf.stack([greyscale, color_image_lab_scaled[:,:,0], color_image_lab_scaled[:,:,1]], axis=-1))
